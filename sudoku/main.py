@@ -1,40 +1,59 @@
 global gameBoard
 
-gameBoard = [[None for _ in range(4)] for _ in range(4)] #Comprehensive List
 
-def checkDuplicacy(row,col,value):
-    for i in range(4):
-        for j in range(4):
+class Sudoku:
+
+    def __init__(self):
+     self.__gameBoard = [[None for _ in range(4)] for _ in range(4)] #Comprehensive List
+     
+    def checkDuplicacy(self,row,col,value):
+        for i in range(4):
             #Checks the duplicacy in its own lines of rows and columns
-            if(i==row or j==col):
-                if(gameBoard[i][j] == value):
-                    return True
-            #To check duplicacy in the respective diagonal items
-            r=1 if row+1%2==0 else -1
-            c= 1 if col+1%2==0 else -1
-            if(gameBoard[i+r][j+c] == value):
+            if(self.__gameBoard[row][i] == value):
                 return True
+
+            if(self.__gameBoard[i][col] == value):
+                return True
+
+            #To check duplicacy in the respective diagonal items
+        startrow = (row//2) * 2
+        startcol = (col//2) * 2
+
+        for i in range(startrow, startrow +2):
+            for j in range(startrow,startcol+2):
                 
-    return False
+                if (self.__gameBoard[i][j] == value):
+                    return True
 
-def showGameBoard():
-    horizontalDash ='_'
-    for i in range(4):
-        print()
-        for j in range(4):
-            print("|\t{} ->({},{})\t".format(gameBoard[i][j],i,j),end="")
-        print("\n|",horizontalDash*90)
-
-def insertTheValue(row,col,value):
-    if(checkDuplicacy(row,col,value)):
+                    
         return False
-    else:
-        gameBoard[row][col] = value
-        return True
+
+    def showGameBoard(self):
+        horizontalDash ='_'
+        for i in range(4):
+            print()
+            for j in range(4):
+                print("|\t{} ->({},{})\t".format(self.__gameBoard[i][j],i,j),end="")
+            print("\n|",horizontalDash*90)
+
+
+    def insertTheValue(self,row,col,value):
+        if(self.checkDuplicacy(row,col,value)):
+            return False
+        else:
+            self.__gameBoard[row][col] = value
+            return True
+
+
+#The real instantiation
 
 
 option=''
-showGameBoard()
+
+gameone = Sudoku()
+
+# showing the gameboard initially
+gameone.showGameBoard()
 
 while(True and not(option == 'x')):
 
@@ -59,7 +78,7 @@ while(True and not(option == 'x')):
 
 
 
-        if(not insertTheValue(int(rowPosition),int(colPosition), int(value))):
+        if(not gameone.insertTheValue(int(rowPosition),int(colPosition), int(value))):
             print("Cannot be inserted due to duplicacy")
         
 
@@ -67,7 +86,7 @@ while(True and not(option == 'x')):
 
     
     elif(option == 's'):
-        showGameBoard()
+        gameone.showGameBoard()
 
 
 
@@ -79,6 +98,3 @@ if __name__=="__main__":
     print("Thank you for playing our game")
 
 
-# a = (1,2,3,4)
-# b,*s =a
-# print(*a,b)
