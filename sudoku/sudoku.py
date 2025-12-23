@@ -1,55 +1,63 @@
-class Sudoku:
+import math
 
-    def __init__(self):
-     self.__game_board = [[None for _ in range(4)] for _ in range(4)] #Comprehensive List
-    
+class Sudoku:
+    def __init__(self, size):
+        if int(math.sqrt(size)) ** 2 != size:
+            raise ValueError("Board size must be a perfect square (4, 9, 16, ...)")
+
+        self.size = size
+        self.subgrid_size = int(math.sqrt(size))
+        self.__game_board = [[None for _ in range(size)] for _ in range(size)]
+
     def get_game_board(self):
         return self.__game_board
-    def check_duplicacy(self,row,col,value):
-        for i in range(4):
+
+    def check_duplicacy(self, row, col, value):
+
+        for i in range(self.size):
             #Checks the duplicacy in its own lines of rows and columns
-            if(self.__game_board[row][i] == value):
+            if self.__game_board[row][i] == value:
+                return True
+            if self.__game_board[i][col] == value:
                 return True
 
-            if(self.__game_board[i][col] == value):
-                return True
+        #To check duplicacy in the respective diagonal items
+        start_row = (row // self.subgrid_size) * self.subgrid_size
+        start_col = (col // self.subgrid_size) * self.subgrid_size
 
-            #To check duplicacy in the respective diagonal items
-        startrow = (row//2) * 2
-        startcol = (col//2) * 2
-
-        for i in range(startrow, startrow +2):
-            for j in range(startrow,startcol+2):
-                
-                if (self.__game_board[i][j] == value):
+        for i in range(start_row, start_row + self.subgrid_size):
+            for j in range(start_col, start_col + self.subgrid_size):
+                if self.__game_board[i][j] == value:
                     return True
 
-                    
         return False
 
-    def show_game_board(self):
-        horizontalDash ='_'
-        for i in range(4):
-            print()
-            for j in range(4):
-                print("|\t{} ->({},{})\t".format(self.__game_board[i][j],i,j),end="")
-            print("\n|",horizontalDash*90)
-
-
-    def insert_value(self,row,col,value):
-        if(self.check_duplicacy(row,col,value)):
+    def insert_value(self, row, col, value):
+        if not (0 <= row < self.size and 0 <= col < self.size):
             return False
-        else:
-            self.__game_board[row][col] = value
-            return True
 
+        if not (1 <= value <= self.size):
+            return False
+
+        if self.check_duplicacy(row, col, value):
+            return False
+
+        self.__game_board[row][col] = value
+        return True
+
+    def show_game_board(self):
+        for row in range(self.size):
+            print()
+            for col in range(self.size):
+                print(f"| {self.__game_board[row][col]} ", end="")
+            print("|")
 
 #The real instantiation
 
 def start_the_game():
     option=''
 
-    gameone = Sudoku()
+    gameone = Sudoku(9)
 
     # showing the gameboard initially
     gameone.show_game_board()
