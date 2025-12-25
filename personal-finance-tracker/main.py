@@ -30,10 +30,30 @@ class CSV:
             with open(cls.CSV_FILE, "a") as csv_file:
                 csv_dict_writer = csv.DictWriter(csv_file, cls.FINANCE_CSV_COLUMNS)
                 csv_dict_writer.writerow(new_record)
-                print("An record is written successfully")
+            print("An record is written successfully")
 
         except err:
             print("Error while writing the data to the csv file\t",err)
+
+    @classmethod
+    def get_transactions(cls, start_date, end_date):
+        df = pd.read_csv(cls.CSV_FILE)
+        df["date"] = pd.to_datetime(df["date"], format="%d-%m-%Y")
+        start_date = datetime.strptime(start_date, format="%d-%m-%Y")
+        end_date = datetime.strptime(end_date, format="%d-%m-%Y")
+
+        mask = (df["date"] >= start_date) & (df["date"]<= end_date)
+
+        filtered_df = df.loc[mask]
+
+        if filtered_df.empty:
+            print("The transactions was not found in the given data range")
+
+        else:
+            print(f"Lists of transactions from {start_date.strftime("%d-%m-%Y")} to {end_date.strftime("%d-%m-%Y")}")
+
+            print(filtered_df.to_string(index=False, formatters={"date":lambda x:x.strftime(CSV.FORMAT)}))
+
 
 
 obj1 = CSV()
