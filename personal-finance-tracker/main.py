@@ -55,8 +55,30 @@ class CSV:
             print(filtered_df.to_string(index=False, formatters={"date":lambda x:x.strftime(CSV.FORMAT)}))
 
 
+    
 
-obj1 = CSV()
-obj1.initialize_csv()
+def add_transaction():
+    obj1 = CSV()
+    obj1.initialize_csv()
+    obj1.write_to_csv("income",1000000000,"Lucrative outcome from concert in europe")
+ 
+def main():
+    while True:
+        print("1.Add a new transaction")
+        prrint("2. View transaction and summary within a date range")
+        print("3. Exit")
 
-obj1.write_to_csv("income",1000000000,"Lucrative outcome from concert in europe")
+        option = input("Enter you option from above:\t")
+
+        if( choice == "1"):
+            add()
+        elif(choice =="2"):
+            transaction_results =CSV.get_transactions("2019-01-22","2021-01-21")
+        elif choice == "3":
+            print("Thank you! See you around")
+            break
+        else:
+            print("Invalid option. Please enter 1/2/3 according to the below options")
+
+if __name__=="__main__":
+    main()
