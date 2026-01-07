@@ -1,52 +1,49 @@
 from bs4 import BeautifulSoup
 import requests
 import os
-from website import  website_list
 from utils import enter_websites_url,read_all_website_url
+from website import  website_list,website_keywords_list
 
-fields = ['no','website_url']
-extracted_website_list=[]
+
 # headers = {
 #     "User-Agent": "KimiNoNawa/1.0"
 # }
 
 
 
+results=[]
+
+enter_websites_url(website_list)
+read_all_website_url()
 
 
-read_all_website_url(extracted_website_list)
+website_code = requests.get(website_list[13])
 
 
-website_code = requests.get(website_list[0]).text
-print(website_code)
-soup = BeautifulSoup(website_code, 'html.parser')
+def scrap_json():
+    res = website_code.json()
+
+    for item in res:
+        results.append(item["title"])
+
+scrap_json() if (website_code.headers.get('Content-Type').split(';')[0] == "application/json") else scrap_html()
+    
+def scrap_html():
+
+    soup = BeautifulSoup(website_code, 'html.parser')
+
+    print(type(website_code))
+
+    words_count_dict ={}
+
+    for i in soup.find_all():
+        text = i.get_text()
+        if text in website_keywords_list:
+            results.append(text)
 
 
-words_list =[]
-words_count_dict ={}
-
-for i in soup.find_all(title=True):
-    title_sentence=i.text.lower()
-
-    for word in title_sentence.split():
-        words_list.append(word)
-
-special_characters_string = "!@#$%^&*()_-+={[}]|\\;:\"<>?/.,"
-for word in words_list:
-    for s in special_characters_string:
-        if s in word:
-            word.replace(s,'')  
-
-        if (not word in words_count_dict):
-            words_count_dict[word] = 1
-        else:
-            words_count_dict[word] +=1
 
 
-# To show all the repeated words of the text which is inside the element that has "title" attribute
-
-for word in words_count_dict:
-    print(f"\n The word \"{word}\"'s count is {words_count_dict[word]}")    
 
 
 

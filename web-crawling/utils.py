@@ -1,13 +1,18 @@
 import csv
-def enter_websites_url():
+
+fields = ['no','website_url']
+extracted_website_list=[]
+
+
+def enter_websites_url(website_list):
     with open("websites.csv", "w", newline='') as csv_website_file:
         csv_writer = csv.writer(csv_website_file)
         csv_writer.writerow(fields)
         for index,i in enumerate(website_list):
-            csv_writer.writerow([index,i+1])
+            csv_writer.writerow([index+1,i])
 
 
-def read_all_website_url(extracted_website_list):
+def read_all_website_url():
     with open("websites.csv", "r") as csv_website_file:
         csv_reader = csv.reader(csv_website_file)
         next(csv_reader)
