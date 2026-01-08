@@ -11,36 +11,47 @@ from website import  website_list,website_keywords_list
 
 
 
-results=[]
+results={}
 
 enter_websites_url(website_list)
 read_all_website_url()
 
 
-website_code = requests.get(website_list[13])
+res = requests.get(website_list[7])
 
 
 def scrap_json():
-    res = website_code.json()
+    res_json = res.json()
 
-    for item in res:
+    for item in res_json:
         results.append(item["title"])
 
-scrap_json() if (website_code.headers.get('Content-Type').split(';')[0] == "application/json") else scrap_html()
-    
 def scrap_html():
-
+    website_code = res.text
     soup = BeautifulSoup(website_code, 'html.parser')
 
     print(type(website_code))
 
-    words_count_dict ={}
 
     for i in soup.find_all():
         text = i.get_text()
-        if text in website_keywords_list:
-            results.append(text)
+        for word in text.split(' '):
+            if word in website_keywords_list:
+                # Trying to keep the  values as short as possible  in the dict 
+            #    But it can be optimised by keeping the words less than equals to 4 and make lists of them
+                if(word in results):
+                    if(len(results[word])>len(text)):
+                        results[word]=text 
+                    else:
+                        continue 
+                else:
+                    results[word]=text
+                    
 
+scrap_json() if (res.headers.get('Content-Type').split(';')[0] == "application/json") else scrap_html()
+    
+
+print(results)
 
 
 
