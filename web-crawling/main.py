@@ -13,24 +13,25 @@ from website import  website_list,website_keywords_list
 
 results={}
 
-enter_websites_url(website_list)
+# enter_websites_url(website_list)
 read_all_website_url()
 
 
-res = requests.get(website_list[8])
+print("Scraping the web.....\nPlease stay tuned!!!")
 
-
-def scrap_json():
+def scrap_json(i):
     res_json = res.json()
-
+    website_name =(i.split('/')[2]).split('.')[0]
+    print(website_name)
     for item in res_json:
         results.append(item["title"])
 
-def scrap_html():
+def scrap_html(i):
     website_code = res.text
     soup = BeautifulSoup(website_code, 'html.parser')
+    website_name =(i.split('/')[2]).split('.')[0]
+    print(website_name)
 
-    print(type(website_code))
 
 
     for i in soup.find_all():
@@ -42,12 +43,20 @@ def scrap_html():
                     results[word] = []
                 # results[word].append(text[:29])
                 results[word] = [*results[word], text[:29]]
-                    
 
-scrap_json() if (res.headers.get('Content-Type').split(';')[0] == "application/json") else scrap_html()
+                
+
+# Trying to crawl and scrap all the website
+
+for i in website_list:
+
+    res = requests.get(i)
+
+    scrap_json(i) if (res.headers.get('Content-Type').split(';')[0] == "application/json") else scrap_html(i)
+###
     
-
-print(results)
+print("Successfully extracted the web. Here's the result\n")
+# print(results)
 
 
 
