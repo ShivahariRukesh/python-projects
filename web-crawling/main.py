@@ -12,6 +12,7 @@ from website import  website_list,website_keywords_list
 
 
 results={}
+website_dir={}
 
 # enter_websites_url(website_list)
 read_all_website_url()
@@ -23,8 +24,10 @@ def scrap_json(i):
     res_json = res.json()
     website_name =(i.split('/')[2]).split('.')[0]
     print(website_name)
+
     for item in res_json:
-        results.append(item["title"])
+         results.append(item["title"])
+    website_dir[website_name] = results
 
 def scrap_html(i):
     website_code = res.text
@@ -36,19 +39,22 @@ def scrap_html(i):
 
     for i in soup.find_all():
         text = i.get_text()
+
         for word in text.split(' '):
             if word in website_keywords_list:
-    
+                
                 if not word in results:
                     results[word] = []
                 # results[word].append(text[:29])
                 results[word] = [*results[word], text[:29]]
 
+    website_dir[website_name] = results
+
                 
 
-# Trying to crawl and scrap all the website
+# Trying to crawl and scrap  first two  websites
 
-for i in website_list:
+for i in website_list[:2]:
 
     res = requests.get(i)
 
@@ -56,7 +62,9 @@ for i in website_list:
 ###
     
 print("Successfully extracted the web. Here's the result\n")
-# print(results)
+
+# Here need to remove new line formatter symbol
+print(website_dir)
 
 
 
