@@ -1,7 +1,7 @@
 from bs4 import BeautifulSoup
 import requests
 import os
-from utils import enter_websites_url,read_all_website_url
+from utils import enter_websites_url,read_all_website_url,scrap_json
 from website import  website_list,website_keywords_list
 
 
@@ -20,35 +20,9 @@ read_all_website_url()
 
 print("Scraping the web.....\nPlease stay tuned!!!")
 
-def scrap_json(i):
-    res_json = res.json()
-    website_name =(i.split('/')[2]).split('.')[0]
-    print(website_name)
-
-    for item in res_json:
-         results.append(item["title"])
-    website_dir[website_name] = results
-
-def scrap_html(i):
-    website_code = res.text
-    soup = BeautifulSoup(website_code, 'html.parser')
-    website_name =(i.split('/')[2]).split('.')[0]
-    print(website_name)
 
 
 
-    for i in soup.find_all():
-        text = i.get_text()
-
-        for word in text.split(' '):
-            if word in website_keywords_list:
-                
-                if not word in results:
-                    results[word] = []
-                # results[word].append(text[:29])
-                results[word] = [*results[word], text[:29]]
-
-    website_dir[website_name] = results
 
                 
 
@@ -58,7 +32,7 @@ for i in website_list[:2]:
 
     res = requests.get(i)
 
-    scrap_json(i) if (res.headers.get('Content-Type').split(';')[0] == "application/json") else scrap_html(i)
+    scrap_json(i,res,results,website_dir) if (res.headers.get('Content-Type').split(';')[0] == "application/json") else scrap_html(i,res,results,website_dir)
 ###
     
 print("Successfully extracted the web. Here's the result\n")
