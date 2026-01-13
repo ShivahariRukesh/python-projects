@@ -1,4 +1,8 @@
 import csv
+from bs4 import BeautifulSoup
+
+from website import website_keywords_list
+
 
 fields = ['no','website_url']
 extracted_website_list=[]
@@ -23,22 +27,18 @@ def read_all_website_url():
 
 def scrap_json(i,res,results,website_dir):
     res_json = res.json()
-    website_name =(i.split('/')[2]).split('.')[0]
+    website_name =(i.split('/')[2]).split('.')[1] + 'json'
     print(website_name)
-
+    if not website_name in website_dir:
+        website_dir[website_name] =[]
     for item in res_json:
-         results.append(item["title"])
-    website_dir[website_name] = results
-
-if __name__ =="__main__":
-    enter_websites_url()
-    read_all_website_url()
-    scrap_json()
+        website_dir[website_name].append(item["title"])
 
 
 
 
-def scrap_html(i):
+
+def scrap_html(i,res,results,website_dir):
     website_code = res.text
     soup = BeautifulSoup(website_code, 'html.parser')
     website_name =(i.split('/')[2]).split('.')[0]
@@ -58,3 +58,13 @@ def scrap_html(i):
                 results[word] = [*results[word], text[:29]]
 
     website_dir[website_name] = results
+
+
+
+
+
+if __name__ =="__main__":
+    enter_websites_url()
+    read_all_website_url()
+    scrap_json()
+    scrap_html()    
