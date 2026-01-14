@@ -25,9 +25,9 @@ def read_all_website_url():
            extracted_website_list.append(row[1])
 
 
-def scrap_json(i,res,results,website_dir):
+def scrap_json(website_url,res,results,website_dir):
     res_json = res.json()
-    website_name =(i.split('/')[2]).split('.')[1] + 'json'
+    website_name =(website_url.split('/')[2]).split('.')[1] + 'json'
     print(website_name)
     if not website_name in website_dir:
         website_dir[website_name] =[]
@@ -38,26 +38,37 @@ def scrap_json(i,res,results,website_dir):
 
 
 
-def scrap_html(i,res,results,website_dir):
+def scrap_html(website_url,res,results,website_dir):
     website_code = res.text
     soup = BeautifulSoup(website_code, 'html.parser')
-    website_name =(i.split('/')[2]).split('.')[0]
+    website_name =(website_url.split('/')[2]).split('.')[0]
+    content = soup.find_all()[0]
     print(website_name)
 
+    # print(soup.find_all())
+    # cc=""
+    # for i in soup.find_all()[0].text:
+    #     if (i == "\n"):
+    #         cc =cc
+    #     else:
+    #         cc = cc + i
+
+    # print(cc)
 
 
-    for i in soup.find_all():
-        text = i.get_text()
 
-        for word in text.split(' '):
-            if word in website_keywords_list:
+    for text in content.text:
+        if not text=='\n': 
+            # print(text)
+            for word in text.split(' '):
+                if word in website_keywords_list:
+                    if not word in results:
+                        results[word] = []
+                    # results[word].append(text[:29])
+                    results[word] = [*results[word], text[:29]]
                 
-                if not word in results:
-                    results[word] = []
-                # results[word].append(text[:29])
-                results[word] = [*results[word], text[:29]]
 
-    website_dir[website_name] = results
+        website_dir[website_name] = results
 
 
 
