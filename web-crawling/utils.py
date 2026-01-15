@@ -55,18 +55,18 @@ def scrap_html(website_url,res,results,website_dir):
 
     # print(cc)
 
+    regex_symbols = set('\r|()\n')
+    filtered_text=''.join(ch for ch in content.text if ch not in regex_symbols)
+    filtered_text_list = filtered_text.split(' ')
+    # print(filtered_text_list)
 
-
-    for text in content.text:
-        if not text=='\n': 
-            # print(text)
-            for word in text.split(' '):
-                if word in website_keywords_list:
-                    if not word in results:
-                        results[word] = []
-                    # results[word].append(text[:29])
-                    results[word] = [*results[word], text[:29]]
-                
+    for word,index in enumerate(filtered_text_list):
+        if word in website_keywords_list:
+            if not word in results:
+                results[word] = []
+            # results[word].append(text[:29])
+            results[word] = [*results[word], word + filtered_text_list[index+1]]
+            
 
         website_dir[website_name] = results
 
