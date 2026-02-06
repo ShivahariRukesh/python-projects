@@ -6,6 +6,33 @@ class Piece:
     def is_valid_move(self, start, end, board):
         return False
 
+class Bishop(Piece):
+    def is_valid_move(self, start, end, board):
+        start_row, start_col = start
+        end_row, end_col = end
+
+        # Must move diagonally
+        if abs(end_row - start_row) != abs(end_col - start_col):
+            return False
+
+        # Determine direction
+        row_step = 1 if end_row > start_row else -1
+        col_step = 1 if end_col > start_col else -1
+
+        # Check path blocking (exclude destination square)
+        r, c = start_row + row_step, start_col + col_step
+        while (r, c) != (end_row, end_col):
+            if board[r][c] is not None:
+                return False
+            r += row_step
+            c += col_step
+
+        # Destination square
+        target = board[end_row][end_col]
+        if target is not None and target.color == self.color:
+            return False
+
+        return True
 
 class Rook(Piece):
     def is_valid_move(self, start, end, board):
@@ -62,6 +89,10 @@ def parse_position(notation):
 board = [[None for _ in range(8)] for _ in range(8)]
 board[0][0] = Rook('b', 'R')  # Black rook at a8
 board[7][7] = Rook('w', 'R')  # White rook at h1
+
+
+board[0][2] = Bishop('b', 'B')  # Black bishop at c8
+board[7][5] = Bishop('w', 'B')  # White bishop at f1
 
 
 turn = 'w'
