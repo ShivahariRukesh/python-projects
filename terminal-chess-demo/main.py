@@ -61,6 +61,29 @@ class Rook(Piece):
             return False
 
         return True
+    
+
+
+class Knight(Piece):
+    def is_valid_move(self, start, end, board):
+        start_row, start_col = start
+        end_row, end_col = end
+
+        row_diff = abs(end_row - start_row)
+        col_diff = abs(end_col - start_col)
+
+        # Knight moves in an L shape
+        if not ((row_diff == 2 and col_diff == 1) or
+                (row_diff == 1 and col_diff == 2)):
+            return False
+
+        # Destination square
+        target = board[end_row][end_col]
+        if target is not None and target.color == self.color:
+            return False
+
+        return True
+
 
 
 def print_board(board):
@@ -93,6 +116,10 @@ board[7][7] = Rook('w', 'R')  # White rook at h1
 
 board[0][2] = Bishop('b', 'B')  # Black bishop at c8
 board[7][5] = Bishop('w', 'B')  # White bishop at f1
+
+
+board[0][1] = Knight('b', 'K')  # Black bishop at b8
+board[7][6] = Knight('w', 'K')  # White bishop at g1
 
 
 turn = 'w'
