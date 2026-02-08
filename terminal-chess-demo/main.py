@@ -85,6 +85,34 @@ class Knight(Piece):
         return True
 
 
+class Pawn(Piece):
+    def is_valid_move(self, start, end, board):
+        start_row, start_col = start
+        end_row, end_col = end
+
+        direction = -1 if self.color == 'w' else 1
+        start_row_home = 6 if self.color == 'w' else 1
+
+        row_diff = end_row - start_row
+        col_diff = abs(end_col - start_col)
+
+        target = board[end_row][end_col]
+
+        if col_diff == 0 and row_diff == direction:
+            if target is None:
+                return True
+
+        if col_diff == 0 and row_diff == 2 * direction and start_row == start_row_home:
+            intermediate_row = start_row + direction
+            if board[intermediate_row][start_col] is None and target is None:
+                return True
+
+        if col_diff == 1 and row_diff == direction:
+            if target is not None and target.color != self.color:
+                return True
+
+        return False
+
 
 def print_board(board):
     print("\ta \tb \tc \td \te \tf \tg \th")
@@ -121,7 +149,14 @@ board[7][5] = Bishop('w', 'B')  # White bishop at f1
 board[0][1] = Knight('b', 'K')  # Black bishop at b8
 board[7][6] = Knight('w', 'K')  # White bishop at g1
 
+# Black pawns
+for col in range(8):
+    board[1][col] = Pawn('b', 'P')
 
+# White pawns
+for col in range(8):
+    board[6][col] = Pawn('w', 'P')
+    
 turn = 'w'
 
 while True:
