@@ -7,12 +7,12 @@ class Knight(Piece):
         row_diff = abs(end_row - start_row)
         col_diff = abs(end_col - start_col)
 
-        # Knight moves in an L shape
+        
         if not ((row_diff == 2 and col_diff == 1) or
                 (row_diff == 1 and col_diff == 2)):
             return False
 
-        # Destination square
+        
         target = board[end_row][end_col]
         if target is not None and target.color == self.color:
             return False
@@ -26,15 +26,15 @@ class Bishop(Piece):
         start_row, start_col = start
         end_row, end_col = end
 
-        # Must move diagonally
+        
         if abs(end_row - start_row) != abs(end_col - start_col):
             return False
 
-        # Determine direction
+        
         row_step = 1 if end_row > start_row else -1
         col_step = 1 if end_col > start_col else -1
 
-        # Check path blocking (exclude destination square)
+        
         r, c = start_row + row_step, start_col + col_step
         while (r, c) != (end_row, end_col):
             if board[r][c] is not None:
@@ -42,7 +42,7 @@ class Bishop(Piece):
             r += row_step
             c += col_step
 
-        # Destination square
+        
         target = board[end_row][end_col]
         if target is not None and target.color == self.color:
             return False
@@ -56,15 +56,15 @@ class Rook(Piece):
         start_row, start_col = start
         end_row, end_col = end
 
-        # Must move in a straight line
+        
         if start_row != end_row and start_col != end_col:
             return False
 
-        # Determine direction
+        
         row_step = 0 if start_row == end_row else (1 if end_row > start_row else -1)
         col_step = 0 if start_col == end_col else (1 if end_col > start_col else -1)
 
-        # Check path blocking (exclude destination square)
+        
         r, c = start_row + row_step, start_col + col_step
         while (r, c) != (end_row, end_col):
             if board[r][c] is not None:
@@ -72,7 +72,7 @@ class Rook(Piece):
             r += row_step
             c += col_step
 
-        # Destination square
+        
         target = board[end_row][end_col]
         if target is not None and target.color == self.color:
             return False
@@ -109,3 +109,41 @@ class Pawn(Piece):
                 return True
 
         return False
+    
+
+
+class Queen(Piece):
+    def is_valid_move(self, start, end, board):
+        start_row, start_col = start
+        end_row, end_col = end
+
+        row_diff = end_row - start_row
+        col_diff = end_col - start_col
+
+        target = board[end_row][end_col]
+
+        
+        if target is not None and target.color == self.color:
+            return False
+
+        
+        if row_diff == 0: 
+            step_row, step_col = 0, 1 if col_diff > 0 else -1
+        elif col_diff == 0:  
+            step_row, step_col = 1 if row_diff > 0 else -1, 0
+        elif abs(row_diff) == abs(col_diff):  
+            step_row = 1 if row_diff > 0 else -1
+            step_col = 1 if col_diff > 0 else -1
+        else:
+            return False  
+
+        
+        curr_row = start_row + step_row
+        curr_col = start_col + step_col
+        while (curr_row, curr_col) != (end_row, end_col):
+            if board[curr_row][curr_col] is not None:
+                return False
+            curr_row += step_row
+            curr_col += step_col
+
+        return True

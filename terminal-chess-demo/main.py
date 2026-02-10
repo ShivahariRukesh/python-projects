@@ -1,4 +1,4 @@
-from chess_pieces import Knight,Rook,Bishop,Pawn
+from chess_pieces import Knight,Rook,Bishop,Pawn, Queen
 from utils import parse_position, print_board
 
 
@@ -14,6 +14,9 @@ board[7][5] = Bishop('w', 'B')  # White bishop at f1
 
 board[0][1] = Knight('b', 'K')  # Black bishop at b8
 board[7][6] = Knight('w', 'K')  # White bishop at g1
+
+board[0][3] = Queen('b', 'Q') #Black Queen at d8
+board[7][3] = Queen('w', 'Q') #White Queen at d1
 
 # Black pawns
 for col in range(8):
